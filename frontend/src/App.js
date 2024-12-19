@@ -22,7 +22,7 @@ function App() {
               </label>
               <input class="inline-block w-full p-4 leading-6 text-lg font-extrabold placeholder-primary3 bg-white shadow border-2 border-primary3 rounded" type="password" placeholder="**********"/>
             </div>
-            {/* <div class="flex flex-wrap -mx-4 mb-6 items-center justify-between">
+            <div class="flex flex-wrap -mx-4 mb-6 items-center justify-between">
               <div class="w-full lg:w-auto px-4 mb-4 lg:mb-0">
                 <label for="">
                   <input type="checkbox"/>
@@ -34,16 +34,16 @@ function App() {
                   Forgot your password?
                 </a>
               </div>
-            </div> */}
+            </div>
             <button class="inline-block w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-primary1 hover:bg-primary3 border-3 border-primary3 shadow rounded transition duration-200">
               Sign in
             </button>
-            {/* <p class="text-center font-extrabold">
+            <p class="text-center font-extrabold">
               Don&rsquo;t have an account?{" "}
-              <a class="text-red-500 hover:underline" href="#">
+              <a class="text-primary2 hover:underline" href="#">
                 Sign up
               </a>
-            </p> */}
+            </p>
           </form>
         </div>
       </div>

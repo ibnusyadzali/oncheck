@@ -1,14 +1,31 @@
-import React from "react";
-import Logo from "../asset/image/Logo SPS no bg.png";
+
+// component
 import Input from "../components/Input";
 import Label from "../components/Label";
 import Button from "../components/Button";
+
+// image
+import Logo from "../asset/image/Logo SPS no bg.png";
 import LoginImage from "../asset/image/LoginImage3.png"
 import IC1 from "../asset/image/IC1.png"
 import IC2 from "../asset/image/IC2.png"
 import IC3 from "../asset/image/IC3.png"
 
-const login = () => {
+// hooks
+import { useNavigate } from "react-router-dom";
+
+
+const LoginPage = () => {
+    const navigate = useNavigate();
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        navigate('/')
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   return (
     <div className="w-full flex justify-between">
       <div className="bg-white h-screen w-[40%] flex justify-center">
@@ -19,12 +36,12 @@ const login = () => {
             <img src={IC2} alt="" className="fixed top-4 left-4 h-fit w-[15%]" />
             <img src={IC1} alt="" className="fixed bottom-4 left-4 h-fit w-1/6" />
             <div>
-              <form action="" className="flex flex-col">
+              <form onSubmit={handleSubmit} className="flex flex-col">
                 <Label htmlFor="email" className="" text="Email"/>
                 <Input type="email" className=" " placeholder={"Input Your Email Here"} />
                 <Label htmlFor="password" className="" text="Password"/>
                 <Input type="password" className=" " placeholder={"Input Your Password Here"}/>
-                <Button type="button" text="Login"/>
+                <Button type="submit" text="Login"/>
               </form>
             </div>
           </div>
@@ -38,4 +55,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default LoginPage;

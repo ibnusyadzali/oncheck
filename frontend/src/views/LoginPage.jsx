@@ -37,11 +37,11 @@ const LoginPage = () => {
             <img src={IC1} alt="" className="fixed bottom-4 left-4 h-fit w-1/6" />
             <div>
               <form onSubmit={handleSubmit} className="flex flex-col">
-                <Label htmlFor="email" className="" text="Email"/>
+                <Label htmlFor="email" className="w-full flex justify-center" text="Email"/>
                 <Input type="email" className=" " placeholder={"Input Your Email Here"} />
-                <Label htmlFor="password" className="" text="Password"/>
+                <Label htmlFor="password" className="w-full flex justify-center" text="Password"/>
                 <Input type="password" className=" " placeholder={"Input Your Password Here"}/>
-                <Button type="submit" text="Login"/>
+                <Button type="submit" text="Login" className="text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"/>
               </form>
             </div>
           </div>

@@ -58,7 +58,7 @@ const NavBar = () => {
           />
         </div>
         <div className="flex flex-row gap-4 items-center">
-          <p className="font-semibold text-slate-200">User</p>
+          <p className="font-semibold text-slate-100">User</p>
           <TbLogout2
             className="text-3xl text-slate-100 cursor-pointer hover:text-5xl duration-200"
             onClick={handleLogOut}
@@ -70,8 +70,8 @@ const NavBar = () => {
           {sidevar.map(({ id, to, page }) => (
             <li
               key={id}
-              className={`cursor-pointer pl-4 py-2 hover:bg-slate-200 hover:text-slate-600 hover:pl-6 ${
-                location.pathname === to ? "border-r-4 border-slate-800 bg-slate-200 text-slate-600 pl-6" : ""
+              className={`cursor-pointer pl-4 py-2 hover:bg-slate-100 hover:text-slate-600 hover:pl-6 ${
+                location.pathname === to ? "border-r-4 border-slate-800 bg-slate-100 text-slate-600 pl-6" : ""
               } duration-200`}
               onClick={() => navigate(to)}
             >

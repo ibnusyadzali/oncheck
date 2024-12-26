@@ -12,3 +12,34 @@
     font-family: "Roboto", serif;
   }
 }
+
+body {
+  font-size: 8px; /* Base size for small screens */
+}
+
+/* Medium screens (e.g., tablets) */
+@media (min-width: 768px) {
+  body {
+    font-size: 8px;
+  }
+}
+
+/* Large screens (e.g., desktops) */
+@media (min-width: 1024px) {
+  body {
+    font-size: 10px;
+  }
+}
+
+/* Extra large screens (e.g., large monitors) */
+@media (min-width: 1280px) {
+  body {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1920px) {
+  body {
+    font-size: 16px;
+  }
+}

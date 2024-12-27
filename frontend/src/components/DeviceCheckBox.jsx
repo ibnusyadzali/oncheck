@@ -2,10 +2,10 @@ import React from "react";
 
 const DeviceCheckBox = ({ deviceArray, onChange, state }) => {
   return (
-    <ul className="w-full my-2 flex flex-row justify-around">
+    <ul className="w-full my-2 flex flex-row justify-between ">
       {deviceArray.map(
         ({ id, deviceId, deviceName, className }) => (
-          <li key={id} className="flex flex-row gap-2">
+          <li key={id} className="w-[15%] flex flex-row gap-2 justify-center">
             <input
               type="checkbox"
               id={deviceId}

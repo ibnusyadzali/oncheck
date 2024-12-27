@@ -15,7 +15,6 @@ const MonitoringPage = () => {
   const [shift, setShift] = useState("");
   const handleShift = async (event, shiftNum) => {
     event.preventDefault();
-    console.log(shift, "in handle");
     try {
       setShift(shiftNum);
       setTime("");
@@ -29,7 +28,6 @@ const MonitoringPage = () => {
   const [time, setTime] = useState("");
   const handleTime = async (event, time) => {
     event.preventDefault();
-    console.log(time, "in handle");
     try {
       setTime(time);
       setSite("");
@@ -42,7 +40,6 @@ const MonitoringPage = () => {
   const [site, setSite] = useState("");
   const handleSite = async (event, site) => {
     event.preventDefault();
-    console.log(site, "in handle");
     try {
       setSite(site);
     } catch (error) {
@@ -73,7 +70,6 @@ const MonitoringPage = () => {
   };
 
   // upload image
-
   const [deviceImages, setDeviceImages] = useState([
     {
       preview: null,
@@ -122,7 +118,7 @@ const MonitoringPage = () => {
 
     const options = {
       maxSizeMB: 0.5,
-      maxWidthOrHeight: 1920,
+      maxWidthOrHeight: 1280,
       useWebWorker: true,
     };
 
@@ -130,7 +126,6 @@ const MonitoringPage = () => {
       const compressedFile = await imageCompression(file, options);
       const previewUrl = URL.createObjectURL(compressedFile);
 
-      // Update the corresponding device image in the array
       setDeviceImages((prev) => {
         const updated = [...prev];
         updated[index] = {
@@ -165,71 +160,32 @@ const MonitoringPage = () => {
     }
   };
 
-  //   const [preview, setPreview] = useState(null);
-  //   const [compressedImage, setCompressedImage] = useState(null);
-  //   const [fileName, setFileName] = useState("No File Choosen");
-  //   const [inputKey, setInputKey] = useState(0);
-  //   const fileInputRef = useRef(null);
-  //   const handleImageUpload = async (event) => {
-  //     event.preventDefault();
-  //     const file = event.target.files[0];
-  //     if (!file) {
-  //       console.log("Please select an image file.");
-  //       return;
-  //     }
-
-  //     // Compression options
-  //     const options = {
-  //       maxSizeMB: 0.5, // Maximum size in MB
-  //       maxWidthOrHeight: 1920, // Max width/height for resizing
-  //       useWebWorker: true,
-  //     };
-
-  //     try {
-  //       console.log(loading, "loading in handle");
-  //       const compressedFile = await imageCompression(file, options);
-  //       setFileName(file.name);
-
-  //       // Update state with compressed file
-  //       setCompressedImage(compressedFile);
-
-  //       // Generate a preview URL for the compressed image
-  //       const previewUrl = URL.createObjectURL(compressedFile);
-  //       setPreview(previewUrl);
-  //     } catch (error) {
-  //       console.error("Error compressing the image:", error);
-  //       console.log("Failed to compress the image.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   const handleCancelUpload = async (event) => {
-  //     event.preventDefault();
-  //     try {
-  //       setPreview(null);
-  //       setCompressedImage(null);
-  //       setFileName("No File Ch0osen");
-  //       setInputKey((prevKey) => prevKey + 1);
-
-  //       if (fileInputRef.current) {
-  //         fileInputRef.current.value = null;
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
   // submit report
   const handleSubmitReport = (event) => {
     event.preventDefault();
     try {
-      //   console.log(shift, "submitted shift");
-      //   console.log(time, "submitted time");
-      //   console.log(site, "submitted site");
-      //   console.log(deviceStates, "submitted deviceState");
-      //   console.log(notes, "submitted deviceState");
-      //   console.log(deviceImages, "submitted image");
+        const devicesStatus = []
+        Object.keys(deviceStates).forEach((key,index) => {
+            const device = {
+                deviceId: index + 1,
+                deviceName: key,
+                deviceState: deviceStates[key],
+                deviceStateImageFile: deviceImages[index].compressedImage,
+                deviceStatePreviewImage: deviceImages[index].preview
+            }
+            devicesStatus.push(device)
+        })
+        const submittedMonitoringReport = {
+            user: "username",
+            shift,
+            reportTime: time,
+            createdReportTime: new Date().toLocaleString(),
+            site,
+            devicesStatus,
+            notes
+        }
+        // const result = submittedMonitoringReport.devicesStatus = devicesStatus
+        console.log(submittedMonitoringReport)
     } catch (error) {
       console.log(error);
     }
@@ -395,7 +351,7 @@ const MonitoringPage = () => {
         <PageName text="MONITORING REPORT" className="" />
         <form
           onSubmit={handleSubmitReport}
-          className="p-4 w-full h-[90%] border-2 rounded-lg flex flex-col gap-4"
+          className="p-4 w-full h-[93%] border-2 rounded-lg flex flex-col gap-2"
         >
           <div className="w-full">
             <OptionButton
@@ -421,64 +377,61 @@ const MonitoringPage = () => {
               flag={site}
             />
           </div>
-          <div>
+          <div className="w-full h-[73%]">
             <Label
               htmlFor=""
               className="font-semibold text-tertiary"
               text="DEVICE STATUS"
             />
-            <div className="p-4 border-2 rounded-lg">
-              <DeviceCheckBox
-                deviceArray={deviceCheckList}
-                onChange={handleCheckboxChange}
-                state={deviceStates}
-              />
-              {/* <UploadImage
-                imgSrc={preview}
-                onChange={handleImageUpload}
-                onClick={handleCancelUpload}
-                fileName={fileName}
-                loadingState={loading}
-                inputKey={inputKey}
-                fileInputRef={fileInputRef}
-              /> */}
-              <ul className="w-full my-2 flex flex-row justify-around">
-                {deviceImages.map((device, index) => {
-                  return (
-                    <UploadImage
-                      key={index} // Unique key for each device
-                      imgSrc={device.preview}
-                      onChange={handleDevicesImageUpload}
-                      fileName={device.fileName}
-                      onClick={handleDevicesCancelUpload}
-                      loadingState={false} // Update this if you have a loading state
-                      inputKey={device.inputKey}
-                      fileInputRef={fileInputRefs.current[index]}
-                      index={index}
-                    />
-                  );
-                })}
-              </ul>
-              <p className="text-tertiary w-full flex justify-start">Notes:</p>
-              <textarea
-                name="status Notes"
-                id="statusNotes"
-                rows="3"
-                maxLength="500"
-                value={notes}
-                onChange={handleChangeNotes}
-                placeholder="Write additional information here (optional)"
-                className="w-full p-2 border-2 rounded-lg"
-              />
-              <div className="text-tertiary w-full flex justify-end">
-                {notes.length} / 500 Characters
-              </div>
-              <div className="w-full flex justify-center my-2">
-                <Button
-                  type="submit"
-                  text="Create Report"
-                  className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
+            <div className="p-2 h-[95%] border-2 rounded-lg flex flex-col justify-between">
+              <div className="w-full h-[45%]">
+                <DeviceCheckBox
+                  deviceArray={deviceCheckList}
+                  onChange={handleCheckboxChange}
+                  state={deviceStates}
                 />
+                <ul className="w-full h-[100%] flex flex-row justify-between">
+                  {deviceImages.map((device, index) => {
+                    return (
+                      <UploadImage
+                        key={index}
+                        imgSrc={device.preview}
+                        onChange={handleDevicesImageUpload}
+                        fileName={device.fileName}
+                        onClick={handleDevicesCancelUpload}
+                        loadingState={false} // Update this if you have a loading state
+                        inputKey={device.inputKey}
+                        fileInputRef={fileInputRefs.current[index]}
+                        index={index}
+                      />
+                    );
+                  })}
+                </ul>
+              </div>
+              <div className="w-full h-[45%]">
+                <p className="text-tertiary w-full flex justify-start">
+                  Notes:
+                </p>
+                <textarea
+                  name="status Notes"
+                  id="statusNotes"
+                  rows="3"
+                  maxLength="500"
+                  value={notes}
+                  onChange={handleChangeNotes}
+                  placeholder="Write additional information here (optional)"
+                  className="w-full p-2 border-2 rounded-lg"
+                />
+                <div className="text-tertiary w-full flex justify-end">
+                  {notes.length} / 500 Characters
+                </div>
+                <div className="w-full flex justify-center my-2">
+                  <Button
+                    type="submit"
+                    text="Create Report"
+                    className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
+                  />
+                </div>
               </div>
             </div>
           </div>

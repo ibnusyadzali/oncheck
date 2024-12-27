@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import imageCompression from "browser-image-compression";
 
 // component
 import PageName from "../components/PageName";
@@ -9,6 +10,7 @@ import UploadImage from "../components/UploadImage";
 import Button from "../components/Button";
 
 const MonitoringPage = () => {
+  const [loading, setLoading] = useState(false);
   // shift button
   const [shift, setShift] = useState("");
   const handleShift = async (event, shiftNum) => {
@@ -56,10 +58,8 @@ const MonitoringPage = () => {
     ocr: false,
     rpm: false,
   });
-
   const handleCheckboxChange = (event, deviceId) => {
     const { checked } = event.target;
-
     setDeviceStates((prevState) => ({
       ...prevState,
       [deviceId]: checked,
@@ -68,20 +68,168 @@ const MonitoringPage = () => {
 
   // device status notes
   const [notes, setNotes] = useState("");
-
   const handleChangeNotes = (event) => {
     setNotes(event.target.value);
   };
+
+  // upload image
+
+  const [deviceImages, setDeviceImages] = useState([
+    {
+      preview: null,
+      compressedImage: null,
+      fileName: "No File Chosen",
+      inputKey: 0,
+    },
+    {
+      preview: null,
+      compressedImage: null,
+      fileName: "No File Chosen",
+      inputKey: 0,
+    },
+    {
+      preview: null,
+      compressedImage: null,
+      fileName: "No File Chosen",
+      inputKey: 0,
+    },
+    {
+      preview: null,
+      compressedImage: null,
+      fileName: "No File Chosen",
+      inputKey: 0,
+    },
+    {
+      preview: null,
+      compressedImage: null,
+      fileName: "No File Chosen",
+      inputKey: 0,
+    },
+  ]);
+
+  const fileInputRefs = useRef(
+    Array(5)
+      .fill()
+      .map(() => React.createRef()) // Create refs for each device
+  );
+
+  const handleDevicesImageUpload = async (event, index) => {
+    const file = event.target.files[0];
+    if (!file) {
+      console.log("Please select an image file.");
+      return;
+    }
+
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      const previewUrl = URL.createObjectURL(compressedFile);
+
+      // Update the corresponding device image in the array
+      setDeviceImages((prev) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          preview: previewUrl,
+          compressedImage: compressedFile,
+          fileName: file.name,
+        };
+        return updated;
+      });
+    } catch (error) {
+      console.error("Error compressing the image:", error);
+    }
+  };
+
+  const handleDevicesCancelUpload = (index) => {
+    setDeviceImages((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        preview: null,
+        compressedImage: null,
+        fileName: "No File Chosen",
+        inputKey: updated[index].inputKey + 1, // Force remount
+      };
+      return updated;
+    });
+
+    // Reset file input
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index].current.value = null;
+    }
+  };
+
+  //   const [preview, setPreview] = useState(null);
+  //   const [compressedImage, setCompressedImage] = useState(null);
+  //   const [fileName, setFileName] = useState("No File Choosen");
+  //   const [inputKey, setInputKey] = useState(0);
+  //   const fileInputRef = useRef(null);
+  //   const handleImageUpload = async (event) => {
+  //     event.preventDefault();
+  //     const file = event.target.files[0];
+  //     if (!file) {
+  //       console.log("Please select an image file.");
+  //       return;
+  //     }
+
+  //     // Compression options
+  //     const options = {
+  //       maxSizeMB: 0.5, // Maximum size in MB
+  //       maxWidthOrHeight: 1920, // Max width/height for resizing
+  //       useWebWorker: true,
+  //     };
+
+  //     try {
+  //       console.log(loading, "loading in handle");
+  //       const compressedFile = await imageCompression(file, options);
+  //       setFileName(file.name);
+
+  //       // Update state with compressed file
+  //       setCompressedImage(compressedFile);
+
+  //       // Generate a preview URL for the compressed image
+  //       const previewUrl = URL.createObjectURL(compressedFile);
+  //       setPreview(previewUrl);
+  //     } catch (error) {
+  //       console.error("Error compressing the image:", error);
+  //       console.log("Failed to compress the image.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   const handleCancelUpload = async (event) => {
+  //     event.preventDefault();
+  //     try {
+  //       setPreview(null);
+  //       setCompressedImage(null);
+  //       setFileName("No File Ch0osen");
+  //       setInputKey((prevKey) => prevKey + 1);
+
+  //       if (fileInputRef.current) {
+  //         fileInputRef.current.value = null;
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
   // submit report
   const handleSubmitReport = (event) => {
     event.preventDefault();
     try {
-      console.log(shift, "submitted shift");
-      console.log(time, "submitted time");
-      console.log(site, "submitted site");
-      console.log(deviceStates, "submitted deviceState");
-      console.log(notes, "submitted deviceState");
+      //   console.log(shift, "submitted shift");
+      //   console.log(time, "submitted time");
+      //   console.log(site, "submitted site");
+      //   console.log(deviceStates, "submitted deviceState");
+      //   console.log(notes, "submitted deviceState");
+      //   console.log(deviceImages, "submitted image");
     } catch (error) {
       console.log(error);
     }
@@ -236,8 +384,9 @@ const MonitoringPage = () => {
     // console.log(wim, "wim in hooks");
     // console.log(ocr, "ocr in hooks");
     // console.log(rpm, "rpm in hooks");
-    console.log(deviceStates, "deviceStates in hooks");
-  }, [deviceStates]);
+    // console.log(deviceStates, "deviceStates in hooks");
+    // console.log(deviceImages, "deviceImages in hooks");
+  }, [deviceImages]);
   return (
     // <LoadingScreen />
 
@@ -284,11 +433,38 @@ const MonitoringPage = () => {
                 onChange={handleCheckboxChange}
                 state={deviceStates}
               />
-              <UploadImage />
+              {/* <UploadImage
+                imgSrc={preview}
+                onChange={handleImageUpload}
+                onClick={handleCancelUpload}
+                fileName={fileName}
+                loadingState={loading}
+                inputKey={inputKey}
+                fileInputRef={fileInputRef}
+              /> */}
+              <ul className="w-full my-2 flex flex-row justify-around">
+                {deviceImages.map((device, index) => {
+                  return (
+                    <UploadImage
+                      key={index} // Unique key for each device
+                      imgSrc={device.preview}
+                      onChange={handleDevicesImageUpload}
+                      fileName={device.fileName}
+                      onClick={handleDevicesCancelUpload}
+                      loadingState={false} // Update this if you have a loading state
+                      inputKey={device.inputKey}
+                      fileInputRef={fileInputRefs.current[index]}
+                      index={index}
+                    />
+                  );
+                })}
+              </ul>
+              <p className="text-tertiary w-full flex justify-start">Notes:</p>
               <textarea
                 name="status Notes"
                 id="statusNotes"
-                rows="7"
+                rows="3"
+                maxLength="500"
                 value={notes}
                 onChange={handleChangeNotes}
                 placeholder="Write additional information here (optional)"

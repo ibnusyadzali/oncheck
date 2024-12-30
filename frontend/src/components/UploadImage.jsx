@@ -11,7 +11,7 @@ const UploadImage = ({
   index,
 }) => {
   return (
-    <li className="w-[15%] h-[100%] flex flex-col justify-between border border-dashed rounded p-2">
+    <li className="w-[15%] h-[100%] flex flex-col justify-between border-2 rounded p-2">
       <input
         key={inputKey}
         ref={fileInputRef}
@@ -25,7 +25,7 @@ const UploadImage = ({
         <div className="group relative">
           <p className="text-sm w-full truncate">
             {loadingState ? "Uploading file..." : fileName}{" "}
-            <span className="absolute hidden group-hover:block bg-slate-600 text-white text-sm rounded p-2 shadow-lg z-10 w-max -left-[6%] transform translate-y-0">
+            <span className="whitespace-normal max-w text-center absolute hidden group-hover:block bg-slate-600 text-white text-sm rounded p-1 shadow-lg z-10 -left-[6%] transform translate-y-0 translate-x-[2.5%]">
               {fileName}
             </span>
           </p>

@@ -65,13 +65,13 @@ const NavBar = () => {
           />
         </div>
       </div>
-      <div className="bg-slate-600 w-[15%] h-[94%] fixed top-[6%]">
+      <div className="bg-slate-400 w-[15%] h-[94%] fixed top-[6%]">
         <ul className="font-semibold text-slate-100">
           {sidevar.map(({ id, to, page }) => (
             <li
               key={id}
-              className={`cursor-pointer pl-4 py-2 hover:bg-slate-100 hover:text-slate-600 hover:pl-6 ${
-                location.pathname === to ? "border-r-4 border-slate-800 bg-slate-100 text-slate-600 pl-6" : ""
+              className={`cursor-pointer border-b-[1px] border-slate-200 pl-4 py-2 hover:bg-slate-100 hover:text-slate-600 hover:pl-6 ${
+                location.pathname === to ? "border-r-4 border-r-slate-800 bg-slate-100 text-slate-600" : ""
               } duration-200`}
               onClick={() => navigate(to)}
             >

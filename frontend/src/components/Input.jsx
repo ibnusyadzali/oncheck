@@ -7,7 +7,7 @@ const Input = ({ type, placeholder, value, onChange, className }) => {
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`my-2 py-1 px-2 border-2 rounded-md border-slate-300  ${className}`}
+      className={`mb-2 py-1 px-2 border-2 rounded-md border-slate-200  ${className}`}
     />
   );
 };

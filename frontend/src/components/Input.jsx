@@ -1,13 +1,16 @@
 import React from "react";
 
-const Input = ({ type, placeholder, value, onChange, className }) => {
+const Input = ({ min,onKeyDown, index, name, type, placeholder, value, onChange, className }) => {
   return (
     <input
+      name={name}
       type={type}
+      min={min}
       placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className={`mb-2 py-1 px-2 border-2 rounded-md border-slate-200  ${className}`}
+      value={value !== 0? value : ''}
+      onChange={(event) => onChange(event,index)}
+      className={`mb-2 py-1 px-2 border-2 rounded-md border-slate-200 ${className}`}
+      onKeyDown={onKeyDown}
     />
   );
 };

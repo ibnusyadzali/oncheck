@@ -1,29 +1,20 @@
 import React from "react";
 
-const SwitchButton = ({ deviceState, onClick }) => {
-  const deviceArray = Object.entries(deviceState).map(
-    ([key, value], index) => ({
-      id: index,
-      deviceName: key,
-      state: value,
-    })
-  );
+const SwitchButton = ({ name, state, onClick, index }) => {
+    console.log()
   return (
-    <ul className="w-full h-1/4 my-1 flex flex-row justify-between ">
-      {deviceArray.map(({ id, deviceName, state }) => (
         <li
-          key={id}
           className="w-[15%] h-[100%] flex flex-col gap-1 items-center"
         >
           <label
-            htmlFor={`switchButton${id}`}
+            htmlFor={`switchButton${index}`}
             className="cursor-pointer uppercase"
           >
-            {deviceName}
+            {name}
           </label>
           <button
-            id={`switchButton${id}`}
-            onClick={(event) => onClick(event, id)}
+            id={`switchButton${index}`}
+            onClick={(event) => onClick(event, index)}
             className={`relative duration-300 w-[45%] h-[40%] p-1 px-2 ${
               state ? "bg-green-400" : "bg-red-400"
             } rounded-full flex flex-row hover:ring-2 hover:ring-tertiary`}
@@ -44,8 +35,6 @@ const SwitchButton = ({ deviceState, onClick }) => {
             ></div>
           </button>
         </li>
-      ))}
-    </ul>
   );
 };
 

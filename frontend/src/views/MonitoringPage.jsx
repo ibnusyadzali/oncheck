@@ -3,7 +3,6 @@ import imageCompression from "browser-image-compression";
 
 // component
 import PageName from "../components/PageName";
-import DeviceCheckBox from "../components/DeviceCheckBox";
 import OptionButton from "../components/OptionButton";
 import Label from "../components/Label";
 import UploadImage from "../components/UploadImage";
@@ -50,32 +49,37 @@ const MonitoringPage = () => {
   };
 
   // device state
-  const [deviceStatesButton, setDeviceStatesButton] = useState({
-    plc: true,
-    daq: true,
-    wim: true,
-    ocr: true,
-    rpm: true,
-  });
-  const handleSwitchChange = (event, id) => {
+
+  const [deviceStatesButton, setDeviceStatesButton] = useState([
+    { deviceName: "PLC", state: true },
+    { deviceName: "DAQ", state: true },
+    { deviceName: "WIM", state: true },
+    { deviceName: "OCR", state: true },
+    { deviceName: "RPM", state: true },
+  ]);
+  const handleSwitchChange = (event, index) => {
     event.preventDefault();
     setDeviceStatesButton((prevState) => {
-      const deviceArray = Object.entries(prevState);
-      const updatedDeviceArray = deviceArray.map(([key, value], index) => {
-        if (index === id) {
-          return [key, !value];
-        }
-        return [key, value];
-      });
-
-      return Object.fromEntries(updatedDeviceArray);
+      const updated = [...prevState];
+      updated[index] = {
+        ...updated[index],
+        state: !updated[index].state, // Toggle the state value
+      };
+      return updated;
     });
   };
 
   // device status notes
-  const [notes, setNotes] = useState("");
+  const deviceNotesInput = {
+    notes: "",
+  };
+  const [deiviceNotes, setdeiviceNotes] = useState(deviceNotesInput);
   const handleChangeNotes = (event) => {
-    setNotes(event.target.value);
+    const { name, value } = event.target;
+    setdeiviceNotes((prevNotes) => ({
+      ...prevNotes,
+      [name]: value, // Dynamically update the key based on `name`
+    }));
   };
 
   // upload image
@@ -182,16 +186,16 @@ const MonitoringPage = () => {
   const handleSubmitReport = (event) => {
     event.preventDefault();
     try {
-      const devicesStatus = [];
-      Object.keys(deviceStatesButton).forEach((key, index) => {
-        const device = {
+      const devicesStatus = deviceStatesButton.map((device, index) => {
+        const data = {
           deviceId: index + 1,
-          deviceName: key,
-          deviceState: deviceStatesButton[key],
+          deviceName: device.deviceName,
+          deviceState: device.state,
           deviceStateImageFile: deviceImages[index].compressedImage,
           deviceStatePreviewImage: deviceImages[index].preview,
         };
-        devicesStatus.push(device);
+
+        return data;
       });
       const submittedMonitoringReport = {
         user: "username",
@@ -199,58 +203,93 @@ const MonitoringPage = () => {
         reportTime: time,
         createdReportTime: new Date().toLocaleString(),
         site,
+        notes: deiviceNotes.notes,
         devicesStatus,
-        notes,
       };
-      // const result = submittedMonitoringReport.devicesStatus = devicesStatus
+
       console.log(submittedMonitoringReport);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleSubmitSummary = (event) => {
-    event.preventDefault();
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
+  // ---------------------------------------------------------------------------
+  const [siteStatus, setSiteStatus] = useState([
+    { siteName: "JICT Import A", totalScan: 0, state: true },
+    { siteName: "JICT Import B", totalScan: 0, state: true },
+    { siteName: "JICT Export", totalScan: 0, state: true },
+    { siteName: "KOJA Import", totalScan: 0, state: true },
+    { siteName: "KOJA Export", totalScan: 0, state: true },
+    { siteName: "MTI CA Export", totalScan: 0, state: true },
+    { siteName: "GRAHA SEGARA", totalScan: 0, state: true },
+  ]);
   // site state
-  const [siteStatesButton, setSiteStatesButton] = useState({
-    "JICT Import A": true,
-    "JICT Import B": true,
-    "JICT Export": true,
-    "KOJA Import": true,
-    "KOJA Export": true,
-    "MTI CA Export": true,
-    "GRAHA SEGARA": true,
-  });
-  const handleSwitchChangeSite = (event, id) => {
+  const handleSwitchChangeSite = (event, index) => {
     event.preventDefault();
-    setSiteStatesButton((prevState) => {
-      const siteArray = Object.entries(prevState);
-      const updatedSiteArray = siteArray.map(([key, value], index) => {
-        if (index === id) {
-          return [key, !value];
-        }
-        return [key, value];
-      });
-
-      return Object.fromEntries(updatedSiteArray);
+    setSiteStatus((prevState) => {
+      const updated = [...prevState];
+      updated[index] = {
+        ...updated[index],
+        state: !updated[index].state, // Toggle the state value
+      };
+      return updated;
     });
   };
 
   // total scan
-  const [siteTotalScanned, setSiteTotalScanned] = useState([
-    { siteName: "JICT Import A", totalScan: 0 },
-    { siteName: "JICT Import B", totalScan: 0 },
-    { siteName: "JICT Export", totalScan: 0 },
-    { siteName: "KOJA Import", totalScan: 0 },
-    { siteName: "KOJA Export", totalScan: 0 },
-    { siteName: "MTI CA Export", totalScan: 0 },
-    { siteName: "GRAHA SEGARA", totalScan: 0 },
-  ]);
+  const handleScannedInput = (event, index) => {
+    const { id, value } = event.target; // Get the input's id and value
+    let validValue = value;
+    if (validValue.startsWith("0") && validValue.length > 1) {
+      validValue = validValue.slice(1);
+    }
+    setSiteStatus((prevState) => {
+      const updatedStatus = [...prevState];
+      updatedStatus[index] = {
+        ...updatedStatus[index],
+        totalScan: validValue,
+      };
+      return updatedStatus;
+    });
+  };
+
+  // site status notes
+  const siteNotesInput = {
+    notes: "",
+  };
+  const [siteNotes, setSiteNotes] = useState(siteNotesInput);
+  const handleChangeSiteNotes = (event) => {
+    const { name, value } = event.target;
+    setSiteNotes((prevNotes) => ({
+      ...prevNotes,
+      [name]: value, // Dynamically update the key based on `name`
+    }));
+  };
+  // submit summary
+  const handleSubmitSummary = (event) => {
+    event.preventDefault();
+    try {
+      const sitesStatus = siteStatus.map((site, index) => {
+        const data = {
+          siteId: index + 1,
+          siteName: site.siteName,
+          siteTotalScan: site.totalScan,
+          siteState: site.state,
+        };
+
+        return data;
+      });
+      const submittedSummaryReport = {
+        shift,
+        createdReportTime: new Date().toLocaleString(),
+        sitesStatus,
+        notes: siteNotes.notes,
+      };
+      console.log(submittedSummaryReport);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // hardcode data
   const shiftButtonList = [
@@ -359,13 +398,8 @@ const MonitoringPage = () => {
   ];
 
   useEffect(() => {
-    // console.log(plc, "plc in hooks");
-    // console.log(daq, "daq in hooks");
-    // console.log(wim, "wim in hooks");
-    // console.log(ocr, "ocr in hooks");
-    // console.log(rpm, "rpm in hooks");
-    // console.log(deviceStates, "deviceStates in hooks");
-    // console.log(deviceImages, "deviceImages in hooks");
+    // console.log(deviceStatesButton, "deviceStates in hooks");
+    // console.log(siteStatus, "siteStatus in hooks");
   }, []);
   return (
     // <LoadingScreen />
@@ -378,7 +412,7 @@ const MonitoringPage = () => {
             className="h-full flex flex-col justify-center text-center"
           />
           <div className="w-[15%] h-[75%]">
-            <p className="w-full text-center">Page Mode</p>
+            <p className="w-full text-center font-semibold">Page Mode</p>
             <div className="w-full h-[75%] flex flex-row font-semibold rounded-lg hover:ring-2 hover:border-0 hover:ring-tertiary duration-200">
               <button
                 className={`w-[50%] border-s-2 hover:bg-slate-200 hover:text-tertiary border-y-2 rounded-s-lg duration-200
@@ -435,12 +469,21 @@ const MonitoringPage = () => {
                 } `}
               />
               <div className="p-2 h-[95%] flex flex-col justify-between">
-                <div className="w-full h-[45%]">
-                  <SwitchButton
-                    deviceState={deviceStatesButton}
-                    onClick={handleSwitchChange}
-                  />
-                  <ul className="w-full h-[100%] flex flex-row justify-between">
+                <div className="w-full h-[60%]">
+                  <ul className="w-full h-[25%] my-1 flex flex-row justify-between ">
+                    {deviceStatesButton.map((device, index) => {
+                      return (
+                        <SwitchButton
+                          key={index}
+                          name={device.deviceName}
+                          state={device.state}
+                          onClick={handleSwitchChange}
+                          index={index}
+                        />
+                      );
+                    })}
+                  </ul>
+                  <ul className="w-full h-[70%] flex flex-row justify-between">
                     {deviceImages.map((device, index) => {
                       return (
                         <UploadImage
@@ -458,22 +501,22 @@ const MonitoringPage = () => {
                     })}
                   </ul>
                 </div>
-                <div className="w-full h-[40%] mt-2">
+                <div className="w-full h-[40%]">
                   <p className="text-tertiary w-full flex justify-start">
                     Notes:
                   </p>
                   <textarea
-                    name="status Notes"
+                    name="notes"
                     id="statusNotes"
                     rows="3"
                     maxLength="500"
-                    value={notes}
+                    value={deiviceNotes.notes}
                     onChange={handleChangeNotes}
                     placeholder="Write additional information here (optional)"
                     className="w-full p-2 border-2 rounded-lg resize-none"
                   />
                   <div className="text-tertiary w-full flex justify-end">
-                    {notes.length} / 500 Characters
+                    {deiviceNotes.notes.length} / 500 Characters
                   </div>
                   <div className="w-full flex justify-center mt-2">
                     <Button
@@ -489,62 +532,94 @@ const MonitoringPage = () => {
         ) : (
           <form
             onSubmit={handleSubmitSummary}
-            className="pt-4 w-full h-[93%] flex flex-col gap-2 bg-yellow-200"
+            className="pt-4 w-full h-[85%] flex flex-col mt-[3%] gap-[5%] border-2 rounded-lg"
           >
-            <div className="flex flex-col bg-blue-400 mb-4">
+            <div className="flex flex-col h-[10%]">
               <h2 className="font-semibold text-2xl w-full text-center">
-                SUMMARY
+                SUMMARY REPORT
               </h2>
               <h3 className="font-semibold text-xl w-full text-center">
-                SHIFT {shift}
+                {`SHIFT: ${shift} DATE: ${new Date().toLocaleDateString()}`}
               </h3>
             </div>
-            <div className="w-full h-2/3 py-4 border-2">
-              <div className="w-full h-1/2 border-2">
-                <SwitchButton
-                  deviceState={siteStatesButton}
-                  onClick={handleSwitchChangeSite}
-                />
-                <div className="w-full flex flex-row ">
-                  {siteTotalScanned.map((item, index) => (
-                    <div className="w-[15%] text-center">
+            <div className="w-full h-[90%]">
+              <div className="w-full h-1/3">
+                <ul className="w-full h-[38%] my-1 flex flex-row justify-between">
+                  {siteStatus.map((site, index) => {
+                    return (
+                      <SwitchButton
+                        key={index}
+                        name={site.siteName}
+                        state={site.state}
+                        onClick={handleSwitchChangeSite}
+                        index={index}
+                      />
+                    );
+                  })}
+                </ul>
+                <div className="w-full h-[45%] flex flex-row ">
+                  {siteStatus.map((site, index) => (
+                    <div key={index} className="w-[15%] text-center">
                       <Label
                         htmlFor={`totalScan${index}`}
                         text="Total Scanned"
                       />
                       <Input
+                        index={index}
+                        min={0}
+                        name="totalScaned"
                         id={`totalScan${index}`}
                         type="number"
+                        value={site.totalScan}
                         placeholder="Input here"
                         className="w-[70%] text-center placeholder:text-center px-0"
+                        onChange={handleScannedInput}
+                        onKeyDown={(event) => {
+                          // Prevent invalid characters like 'e', '+', and '-'
+                          if (["e", "E", "+", "-"].includes(event.key)) {
+                            event.preventDefault();
+                          }
+                          // Prevent Enter key from propagating and triggering other elements
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            event.stopPropagation();
+                          }
+                        //   if (onKeyDown) {
+                        //     onKeyDown(event);
+                        //   }
+                        }}
                       />
                     </div>
                   ))}
                 </div>
               </div>
-              <p className="text-tertiary w-full px-2 flex justify-start">
+              <div className="w-full">
+                <div className="w-[97%] mx-auto">
+                  <p className="text-tertiary w-full px-2 flex justify-start">
                     Notes:
                   </p>
                   <textarea
-                    name="status Notes"
-                    id="statusNotes"
-                    rows="3"
+                    name="notes"
+                    id="siteNotes"
+                    rows="8"
                     maxLength="500"
-                    value={notes}
-                    onChange={handleChangeNotes}
+                    value={siteNotes.notes}
+                    onChange={handleChangeSiteNotes}
                     placeholder="Write additional information here (optional)"
-                    className="w-[98%] mx-2 p-2 border-2 rounded-lg resize-none"
+                    className="p-2 w-full border-2 rounded-lg resize-none flex"
                   />
                   <div className="text-tertiary w-full flex justify-end">
-                    {notes.length} / 500 Characters
+                    {siteNotes.notes.length} / 500 Characters
                   </div>
-                  <div className="w-full flex justify-center mt-2">
-                    <Button
-                      type="submit"
-                      text="Create Report"
-                      className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
-                    />
-                  </div>
+                </div>
+                <div className="w-full flex justify-center mt-2">
+                  <Button
+                    type="submit"
+                    text="Create Summary Report"
+                    className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
+                  />
+                </div>
+              </div>
             </div>
           </form>
         )}

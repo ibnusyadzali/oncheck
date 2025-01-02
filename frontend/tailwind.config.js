@@ -8,6 +8,7 @@ module.exports = {
         secondary: "#fbcc0e",
         tertiary: "#35363a",
         bgprimary: "#d5cac4",
+        text1: "#f1f5f9"
       },
       boxShadow: {
         // Light inner shadow for elevated effect

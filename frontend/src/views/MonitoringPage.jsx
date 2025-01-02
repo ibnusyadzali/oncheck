@@ -13,7 +13,7 @@ import Input from "../components/Input";
 const MonitoringPage = () => {
   const [loading, setLoading] = useState(false);
   // shift button
-  const [shift, setShift] = useState("");
+  const [shift, setShift] = useState(1);
   const handleShift = async (event, shiftNum) => {
     event.preventDefault();
     try {
@@ -73,10 +73,10 @@ const MonitoringPage = () => {
   const deviceNotesInput = {
     notes: "",
   };
-  const [deiviceNotes, setdeiviceNotes] = useState(deviceNotesInput);
+  const [deviceNotes, setdeviceNotes] = useState(deviceNotesInput);
   const handleChangeNotes = (event) => {
     const { name, value } = event.target;
-    setdeiviceNotes((prevNotes) => ({
+    setdeviceNotes((prevNotes) => ({
       ...prevNotes,
       [name]: value, // Dynamically update the key based on `name`
     }));
@@ -203,7 +203,7 @@ const MonitoringPage = () => {
         reportTime: time,
         createdReportTime: new Date().toLocaleString(),
         site,
-        notes: deiviceNotes.notes,
+        notes: deviceNotes.notes,
         devicesStatus,
       };
 
@@ -416,14 +416,14 @@ const MonitoringPage = () => {
             <div className="w-full h-[75%] flex flex-row font-semibold rounded-lg hover:ring-2 hover:border-0 hover:ring-tertiary duration-200">
               <button
                 className={`w-[50%] border-s-2 hover:bg-slate-200 hover:text-tertiary border-y-2 rounded-s-lg duration-200
-                    ${pageMode && "bg-slate-600 text-white"}`}
+                    ${pageMode && "bg-slate-600 text-text1"}`}
                 onClick={(event) => handleTogglePage(event, true)}
               >
                 Report
               </button>
               <button
                 className={`w-[50%] border-e-2 hover:bg-slate-200 hover:text-tertiary border-y-2 rounded-e-lg duration-200
-                     ${!pageMode && "bg-slate-600 text-white"}`}
+                     ${!pageMode && "bg-slate-600 text-text1"}`}
                 onClick={(event) => handleTogglePage(event, false)}
               >
                 Summary
@@ -479,6 +479,9 @@ const MonitoringPage = () => {
                           state={device.state}
                           onClick={handleSwitchChange}
                           index={index}
+                          textOk="Normal"
+                          textNotOk="Down"
+                          labelClassname= "uppercase"
                         />
                       );
                     })}
@@ -510,19 +513,19 @@ const MonitoringPage = () => {
                     id="statusNotes"
                     rows="3"
                     maxLength="500"
-                    value={deiviceNotes.notes}
+                    value={deviceNotes.notes}
                     onChange={handleChangeNotes}
                     placeholder="Write additional information here (optional)"
                     className="w-full p-2 border-2 rounded-lg resize-none"
                   />
                   <div className="text-tertiary w-full flex justify-end">
-                    {deiviceNotes.notes.length} / 500 Characters
+                    {deviceNotes.notes.length} / 500 Characters
                   </div>
                   <div className="w-full flex justify-center mt-2">
                     <Button
                       type="submit"
                       text="Create Report"
-                      className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
+                      className="w-[30%] text-text1 hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
                     />
                   </div>
                 </div>
@@ -553,6 +556,8 @@ const MonitoringPage = () => {
                         state={site.state}
                         onClick={handleSwitchChangeSite}
                         index={index}
+                        textOk="Normal"
+                        textNotOk="Down"
                       />
                     );
                   })}
@@ -584,9 +589,6 @@ const MonitoringPage = () => {
                             event.preventDefault();
                             event.stopPropagation();
                           }
-                        //   if (onKeyDown) {
-                        //     onKeyDown(event);
-                        //   }
                         }}
                       />
                     </div>
@@ -616,7 +618,7 @@ const MonitoringPage = () => {
                   <Button
                     type="submit"
                     text="Create Summary Report"
-                    className="w-[30%] text-white hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
+                    className="w-[30%] text-text1 hover:text-tertiary bg-primary hover:bg-opacity-90 focus:bg-opacity-90 focus:outline-none hover:ring-2 focus:ring-2 focus:ring-tertiary hover:ring-tertiary disabled:bg-gray-400 disabled:cursor-not-allowed duration-200"
                   />
                 </div>
               </div>

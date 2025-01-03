@@ -12,13 +12,13 @@ const SwitchButton = ({ name, state, onClick, textOk, textNotOk, labelClassName,
       <button
         id={`switchButton${index}`}
         onClick={(event) => onClick(event, index)}
-        className={`relative duration-300 w-[45%] h-[40%] p-1 px-2 ${
+        className={`relative duration-300 w-[45%] h-[40%] lg:h-[28%] p-1 px-2 ${
           state ? "bg-green-400" : "bg-red-400"
         } rounded-full flex flex-row hover:ring-2 hover:ring-tertiary`}
       >
         <div
           className={`absolute flex flex-col justify-center inset-0 w-[50%] h-[100%] transform transition-transform duration-300
-                ${state ? "translate-x-[20%]" : textNotOk == "Down" ? "translate-x-[80%]": "translate-x-[75%]"}`}
+                ${state ? "translate-x-[20%]" : textNotOk == "Down" ? "translate-x-[80%] lg:translate-x-[75%]": "translate-x-[75%] lg:translate-x-[65%]"}`}
         >
           {state ? textOk : textNotOk}
         </div>

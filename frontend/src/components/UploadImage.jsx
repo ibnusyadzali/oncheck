@@ -42,7 +42,7 @@ const UploadImage = ({
 
             Choose File
             </p>
-            <TbUpload className="h-full text-lg flex flex-col justify-center"/>
+            <TbUpload className="h-full text-lg lg:text-sm flex flex-col justify-center"/>
           </label>
         </div>
       )}

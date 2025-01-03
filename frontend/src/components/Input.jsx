@@ -9,7 +9,7 @@ const Input = ({ min,onKeyDown, index, name, type, placeholder, value, onChange,
       placeholder={placeholder}
       value={value !== 0? value : ''}
       onChange={(event) => onChange(event,index)}
-      className={`mb-2 py-1 px-2 border-2 rounded-md border-slate-200 ${className}`}
+      className={`py-1 px-2 border-2 rounded-md border-slate-200 ${className}`}
       onKeyDown={onKeyDown}
     />
   );

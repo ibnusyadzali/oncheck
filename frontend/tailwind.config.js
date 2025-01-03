@@ -38,7 +38,18 @@ module.exports = {
         "polymorphic-xl":
           "8px 8px 12px rgba(0, 0, 0, 0.25), -8px -8px 12px rgba(255, 255, 255, 0.3)",
       },
+      screens: {
+        'sm': {'min': '640px', 'max': '767px'},
+        'md': {'min': '768px', 'max': '1023px'},
+        'lg': {'min': '1024px', 'max': '1279px'},
+        'xl': {'min': '1280px'},
+      },
+      textShadow: {
+        sm: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+        md: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+        lg: "3px 3px 6px rgba(0, 0, 0, 0.5)",
+      },
     },
   },
-  plugins: [],
+  plugins: ["tailwindcss-textshadow"],
 };

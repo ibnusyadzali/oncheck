@@ -75,7 +75,7 @@ const DropDownButton = ({
         onClick={(event) => {
           handleTogggleDropDown(event, index);
         }}
-        className={`w-[80%] px-0 py-2 border rounded-lg shadow-md focus:outline-none hover:ring-2 hover:ring-tertiary ${siteStatus[index].status == "Normal" ? "bg-green-400" : siteStatus[index].status == "Potentially Broken" ? "bg-yellow-400" : siteStatus[index].status == "Broken" ? "bg-red-400" : "bg-white text-slate-400"}`}
+        className={`duration-200 w-[80%] px-0 py-2 border rounded-lg shadow-md focus:outline-none hover:ring-2 hover:ring-tertiary ${siteStatus[index].status == "Normal" ? "bg-green-400" : siteStatus[index].status == "Potentially Broken" ? "bg-yellow-400" : siteStatus[index].status == "Broken" ? "bg-red-400" : "bg-white text-slate-400"}`}
       >
         {siteStatus[index].status}
       </button>

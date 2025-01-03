@@ -411,7 +411,7 @@ const MonitoringPage = () => {
             text="MONITORING REPORT"
             className="h-full flex flex-col justify-center text-center"
           />
-          <div className="w-[15%] h-[75%]">
+          <div className="w-[15%] h-[75%] flex flex-col gap-1 mt-2">
             <p className="w-full text-center font-semibold">Page Mode</p>
             <div className="w-full h-[75%] flex flex-row font-semibold rounded-lg hover:ring-2 hover:border-0 hover:ring-tertiary duration-200">
               <button
